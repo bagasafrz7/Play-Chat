@@ -37,7 +37,12 @@
                     <hr />
                   </b-col>
                 </b-row>
-                <b-button type="button" class="btn-google">Google</b-button>
+                <b-button
+                  type="button"
+                  variant="primary"
+                  @click="showMessageGoogle"
+                  class="btn-google"
+                >Google</b-button>
                 <p class="text-center my-2">
                   Don't have an account?
                   <router-link to="/register">Sign Up</router-link>
@@ -53,18 +58,35 @@
 
 <script>
 export default {
-  name: 'Login'
+  name: 'Login',
+  data() {
+    return {}
+  },
+  methods: {
+    showMessageGoogle() {
+      this.boxTwo = ''
+      this.$bvModal.msgBoxOk('Sorry, Fitur is Coming Soon :)', {
+        title: 'Confirmation',
+        size: 'md',
+        buttonSize: 'md',
+        okVariant: 'success',
+        headerClass: 'p-2 border-bottom-0',
+        footerClass: 'p-2 border-top-0',
+        centered: true
+      })
+    }
+  }
 }
 </script>
 
-<style>
+<style scoped>
 main {
   background: #e5e5e5;
 }
 .main-login {
   width: 50%;
   background: #fff;
-  margin: 50px auto;
+  margin: 50px auto 100px;
   padding: 25px 50px;
   border-radius: 30px;
 }
@@ -74,6 +96,7 @@ main {
 }
 .main-login h6 {
   color: #232323;
+  margin: 20px 0;
 }
 label {
   color: #848484;
