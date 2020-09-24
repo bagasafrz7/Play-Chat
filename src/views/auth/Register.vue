@@ -11,24 +11,26 @@
                   <h3>Register</h3>
               </b-col>-->
               <h6>Let's create you account</h6>
-              <b-form>
+              <b-form @submit.prevent="postUser">
                 <b-form-group id="input-group-3" label="Name" label-for="input-3">
                   <b-form-input
                     id="input-3"
                     type="text"
+                    v-model="form.user_fullname"
                     required
                     placeholder="Enter Your Full Name"
                   ></b-form-input>
                 </b-form-group>
 
                 <b-form-group id="input-group-1" label="Email" label-for="input-1">
-                  <b-form-input id="input-1" type="email" required placeholder="Enter Your Email"></b-form-input>
+                  <b-form-input id="input-1" type="email" v-model="form.user_email" required placeholder="Enter Your Email"></b-form-input>
                 </b-form-group>
 
                 <b-form-group id="input-group-2" label="Password" label-for="input-2">
                   <b-form-input
                     id="input-2"
                     type="password"
+                    v-model="form.user_password"
                     required
                     placeholder="Enter Your Password"
                   ></b-form-input>
@@ -62,12 +64,40 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
   name: 'Register',
   data() {
-    return {}
+    return {
+      inMsg: '',
+      form: {
+        user_fullname: '',
+        user_email: '',
+        user_password: ''
+      }
+    }
   },
   methods: {
+    ...mapActions(['addUsers']),
+    makeToast(variant = '') {
+      this.$bvToast.toast(`${this.inMsg}`, {
+        title: `Notice! ${'' || ''}`,
+        variant: variant,
+        solid: true
+      })
+    },
+    postUser() {
+      this.addUsers(this.form)
+        .then((response) => {
+          console.log(response)
+        })
+        .catch((error) => {
+          this.inMsg = error.data.msg
+          this.makeToast(this.inMsg)
+          // console.log(error.data.msg)
+        })
+    },
     back() {
       this.$router.push('/login')
     },

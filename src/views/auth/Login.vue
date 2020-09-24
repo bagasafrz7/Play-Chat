@@ -7,15 +7,30 @@
             <div class="main-login">
               <h3>Login</h3>
               <h6>Hi, Wellcome back!</h6>
-              <b-form>
-                <b-form-group id="input-group-1" label="Email" label-for="input-1">
-                  <b-form-input id="input-1" type="email" required placeholder="Enter Your Email"></b-form-input>
+              <b-form @submit.prevent="onSubmit">
+                <b-form-group
+                  id="input-group-1"
+                  label="Email"
+                  label-for="input-1"
+                >
+                  <b-form-input
+                    id="input-1"
+                    type="email"
+                    v-model="form.user_email"
+                    required
+                    placeholder="Enter Your Email"
+                  ></b-form-input>
                 </b-form-group>
 
-                <b-form-group id="input-group-2" label="Password" label-for="input-2">
+                <b-form-group
+                  id="input-group-2"
+                  label="Password"
+                  label-for="input-2"
+                >
                   <b-form-input
                     id="input-2"
                     type="password"
+                    v-model="form.user_password"
                     required
                     placeholder="Enter Your Password"
                   ></b-form-input>
@@ -25,7 +40,9 @@
                   <p class="text-right">Forgot password?</p>
                 </router-link>
 
-                <b-button type="submit" class="btn-login" variant="primary">Login</b-button>
+                <b-button type="submit" class="btn-login" variant="primary"
+                  >Login</b-button
+                >
                 <b-row class="my-4">
                   <b-col cols="4" md="4" sm="4">
                     <hr />
@@ -42,7 +59,8 @@
                   variant="primary"
                   @click="showMessageGoogle"
                   class="btn-google"
-                >Google</b-button>
+                  >Google</b-button
+                >
                 <p class="text-center my-2">
                   Don't have an account?
                   <router-link to="/register">Sign Up</router-link>
@@ -57,12 +75,40 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
   name: 'Login',
   data() {
-    return {}
+    return {
+      form: {
+        user_email: '',
+        user_password: ''
+      }
+    }
   },
   methods: {
+    ...mapActions(['login']),
+    makeToast(variant = '') {
+      this.$bvToast.toast(`${this.inMsg}`, {
+        title: `Notice! ${'' || ''}`,
+        variant: variant,
+        solid: true
+      })
+    },
+    onSubmit() {
+      // console.log(this.form)
+      this.login(this.form)
+        .then((result) => {
+          // console.log(result)
+          this.$router.push('/')
+        })
+        .catch((error) => {
+          this.inMsg = error.data.msg
+          this.makeToast(this.inMsg)
+          // console.log(error)
+        })
+    },
     showMessageGoogle() {
       this.boxTwo = ''
       this.$bvModal.msgBoxOk('Sorry, Fitur is Coming Soon :)', {
