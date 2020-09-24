@@ -1,18 +1,32 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <b-container fluid>
+      <b-row>
+        <b-col cols="3" md="3" sm="3" class="main-sidebar">
+          <Sidebar />
+        </b-col>
+        <b-col cols="9" md="9" sm="9">
+          <MainChat />
+        </b-col>
+      </b-row>
+    </b-container>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
-
+import Sidebar from '../components/_base/Sidebar'
+import MainChat from '../components/_base/MainChat'
 export default {
   name: 'Home',
   components: {
-    HelloWorld
+    Sidebar,
+    MainChat
   }
 }
 </script>
+
+<style scoped>
+.main-sidebar {
+  border-right: 1px solid #e5e5e5;
+}
+</style>
