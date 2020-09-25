@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import Login from '../views/auth/Login.vue'
 import Register from '../views/auth/Register.vue'
 import ForgotPassword from '../views/auth/ForgotPassword.vue'
+import updateProfile from '../views/ProfileUser.vue'
 import store from '../store'
 
 Vue.use(VueRouter)
@@ -13,6 +14,12 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/update-profile',
+    name: 'updateProfile',
+    component: updateProfile,
     meta: { requiresAuth: true }
   },
   {

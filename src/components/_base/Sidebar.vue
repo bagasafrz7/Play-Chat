@@ -33,7 +33,10 @@
             <b-icon icon="question-circle" aria-hidden="true"></b-icon>
             Play Chat FAQ
           </b-dropdown-item-button>
-          <b-dropdown-item-button variant="danger">
+          <b-dropdown-item-button
+            variant="danger"
+            @click="$bvModal.show('modal-logout')"
+          >
             <b-icon icon="power" aria-hidden="true"></b-icon>
             Logout
           </b-dropdown-item-button>
@@ -204,19 +207,75 @@
         </b-col>
       </b-row>
     </div>
+    <!-- Modal Logout -->
+    <div>
+      <b-modal id="modal-logout" centered>
+        <template v-slot:modal-header="{ close }">
+          <!-- Emulate built in modal header close button action -->
+          <h5>Notice</h5>
+          <b-button size="sm" variant="outline" @click="close()">X</b-button>
+        </template>
+
+        <h6>Are You Sure to Quit?</h6>
+
+        <template v-slot:modal-footer="{ cancel }">
+          <b-button size="sm" variant="success" @click="handleLogout"
+            >OK</b-button
+          >
+          <b-button size="sm" variant="danger" @click="cancel()"
+            >Cancel</b-button
+          >
+        </template>
+      </b-modal>
+    </div>
   </div>
 </template>
 
 <script>
+// import axios from 'axios'
+import { mapActions, mapGetters } from 'vuex'
+
 export default {
   name: 'Sidebar',
   data() {
-    return {}
+    return {
+      user_id: '',
+      urlAPI: process.env.VUE_APP_URL,
+      dataUsers: []
+    }
+  },
+  created() {
+    this.getDataUsers()
   },
   methods: {
+    ...mapActions(['userLoginData']),
+    getDataUsers() {
+      this.userLoginData()
+        .then((response) => {
+          console.log(response)
+        })
+        .catch((error) => {
+          console.log(error.data.msg)
+        })
+      // axios
+      //   .get(`${process.env.VUE_APP_URL}users/${this.users.user_id}`)
+      //   .then((response) => {
+      //     // this.dataUsers = response.data.data
+      //     // console.log(this.dataUsers)
+      //     console.log(response)
+      //   })
+      //   .catch((error) => {
+      //     console.log(error)
+      //   })
+    },
     linkProfile() {
       this.$router.push('/update-profile')
     }
+  },
+  computed: {
+    ...mapGetters({
+      users: 'userData'
+    })
   }
 }
 </script>

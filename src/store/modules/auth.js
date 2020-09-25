@@ -6,9 +6,13 @@ export default ({
     msg: '',
     inMsg: '',
     user: {},
-    token: localStorage.getItem('token') || null
+    token: localStorage.getItem('token') || null,
+    fullData: {}
   },
   mutations: {
+    setFullUserData(state, payload) {
+      state.fullData = payload
+    },
     setUser(state, payload) {
       state.user = payload
       state.token = payload.token
@@ -22,6 +26,23 @@ export default ({
     }
   },
   actions: {
+    userLoginData(context, payload) {
+      return new Promise((resolve, reject) => {
+        axios
+          .get(`${process.env.VUE_APP_URL}users/${context.state.user.user_id}`)
+          .then(response => {
+            context.commit('setFullUserData', response.data.data)
+            resolve(response.data)
+          })
+          .catch(error => {
+            if (error.response === undefined) {
+              alert('Tidak dapat terhubung ke server')
+            } else {
+              reject(error.response)
+            }
+          })
+      })
+    },
     login(context, payload) {
       return new Promise((resolve, reject) => {
         axios
@@ -95,10 +116,13 @@ export default ({
     }
   },
   getters: {
+    getFullUserData(state) {
+      return state.fullData
+    },
     isLogin(state) {
       return state.token !== null
     },
-    setUser(state) {
+    userData(state) {
       return state.user
     }
   }
