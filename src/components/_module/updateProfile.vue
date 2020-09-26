@@ -2,18 +2,22 @@
   <div class="sidebar">
     <b-row class="title">
       <b-col cols="12" md="12" sm="12" class="text-center">
-        <h4>@user_name</h4>
+        <h4>@{{ getFullUserData[0].user_name }}</h4>
         <b-icon icon="arrow-left-circle" @click="back"></b-icon>
       </b-col>
     </b-row>
-    <b-form>
+    <b-form @submit.prevent="update">
       <b-row>
         <b-col cols="12" md="12" sm="12" class="text-center">
           <div class="profile-image">
-            <img src="../../assets/img/luis.jpg" alt="" srcset="" />
+            <img
+              :src="urlAPI + getFullUserData[0].user_image"
+              alt=""
+              srcset=""
+            />
             <p class="h4 mb-2" style="color: grey">
               <!-- @change="browse" -->
-              <input v-if="isEdit === true" type="file" />
+              <input v-if="isEdit === true" type="file" @change="browse" />
               <br v-if="isEdit === true" />
               <b-icon
                 icon="pencil"
@@ -30,6 +34,7 @@
               <b-form-input
                 id="input-2"
                 required
+                v-model="form.user_fullname"
                 placeholder="Enter Your Full Name"
               ></b-form-input>
             </b-form-group>
@@ -45,6 +50,7 @@
               <b-form-input
                 id="input-1"
                 required
+                v-model="form.user_phone"
                 placeholder="Enter Your Number Phone"
               ></b-form-input>
             </b-form-group>
@@ -54,6 +60,7 @@
               <b-form-input
                 id="input-3"
                 required
+                v-model="form.user_name"
                 placeholder="Enter Your User Name"
               ></b-form-input>
             </b-form-group>
@@ -64,11 +71,17 @@
               <b-form-input
                 id="input-4"
                 required
+                v-model="form.user_bio"
                 placeholder="Enter Your Bio"
               ></b-form-input>
             </b-form-group>
             <p>Bio</p>
-            <button class="btn-update">Update Your Profile</button>
+            <!-- <button type="submit" class="btn-update">
+              Update Your Profile
+            </button> -->
+            <b-button type="submit" class="btn-update"
+              >Update Your Profile</b-button
+            >
           </div>
         </b-col>
       </b-row>
@@ -100,14 +113,82 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
+
 export default {
   name: 'updateProfile',
   data() {
     return {
-      isEdit: false
+      user_id: '',
+      isEdit: false,
+      urlAPI: process.env.VUE_APP_URL,
+      form: {
+        user_fullname: '',
+        user_name: '',
+        user_image: '',
+        user_phone: '',
+        user_bio: ''
+      }
     }
   },
+  created() {
+    this.getDataUsers()
+  },
   methods: {
+    ...mapActions({
+      addUsersForm: 'addUsersForm',
+      userLoginData: 'userLoginData',
+      updateUsers: 'updateUsers'
+    }),
+    update() {
+      // console.log(this.form)
+      const data = new FormData()
+      data.append('user_fullname', this.form.user_fullname)
+      data.append('user_name', this.form.user_name)
+      data.append('user_image', this.form.user_image)
+      data.append('user_phone', this.form.user_phone)
+      data.append('user_bio', this.form.user_bio)
+      const setData = {
+        user_id: this.getFullUserData[0].user_id,
+        form: data
+      }
+      this.updateUsers(setData)
+        .then((response) => {
+          // this.inMsg = response.msg
+          // this.makeToast(this.inMsg)
+          // this.isUpdate = false
+          // this.$refs['add-product'].hide()
+          // this.getProducts()
+          console.log(response)
+        })
+        .catch((error) => {
+          // this.inMsg = error.data.msg
+          // this.makeToast(this.inMsg)
+          // this.isUpdate = false
+          // this.$refs['add-product'].hide()
+          console.log(error)
+        })
+    },
+    getDataUsers() {
+      this.userLoginData()
+        .then((response) => {
+          console.log(response)
+        })
+        .catch((error) => {
+          console.log(error.data)
+        })
+    },
+    // setProduct(data) {
+    //   this.form = {
+    //     user_fullname: data.user_fullname,
+    //     user_name: data.user_name,
+    //     user_image: data.user_image,
+    //     user_phone: data.user_phone,
+    //     user_bio: data.user_bio
+    //   }
+    //   this.user_id = data.user_id
+    // console.log(data.product_id)
+    // },
     back() {
       this.$router.push('/')
     },
@@ -119,10 +200,11 @@ export default {
       }
     },
     browse(event) {
-      this.form.image = event.target.files[0]
-      const data = new FormData()
-      data.append('image', this.form.image)
-      this.profilePicture([data, this.userData.user_id])
+      this.form.user_image = event.target.files[0]
+      // this.form.image = event.target.files[0]
+      // const data = new FormData()
+      // data.append('image', this.form.image)
+      // this.profilePicture([data, this.userData.user_id])
       // this.profilePicture([this.form.image, this.userData.user_id])
     },
     fitur() {
@@ -137,6 +219,9 @@ export default {
         centered: true
       })
     }
+  },
+  computed: {
+    ...mapGetters(['getFullUserData', 'userData'])
   }
 }
 </script>

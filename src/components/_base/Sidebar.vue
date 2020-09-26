@@ -9,7 +9,7 @@
           <template v-slot:button-content>
             <b-icon icon="text-left" aria-hidden="true"></b-icon>
           </template>
-          <b-dropdown-item-button>
+          <b-dropdown-item-button @click="fitur">
             <b-icon icon="gear-fill" aria-hidden="true"></b-icon>
             Settings
           </b-dropdown-item-button>
@@ -17,19 +17,19 @@
             <b-icon icon="person" aria-hidden="true"></b-icon>
             Contacts
           </b-dropdown-item-button>
-          <b-dropdown-item-button>
+          <b-dropdown-item-button @click="fitur">
             <b-icon icon="telephone" aria-hidden="true"></b-icon>
             Calls
           </b-dropdown-item-button>
-          <b-dropdown-item-button>
+          <b-dropdown-item-button @click="fitur">
             <b-icon icon="bookmark" aria-hidden="true"></b-icon>
             Save Messages
           </b-dropdown-item-button>
-          <b-dropdown-item-button>
+          <b-dropdown-item-button @click="showModal">
             <b-icon icon="person-plus" aria-hidden="true"></b-icon>
             Invite Friends
           </b-dropdown-item-button>
-          <b-dropdown-item-button>
+          <b-dropdown-item-button @click="fitur">
             <b-icon icon="question-circle" aria-hidden="true"></b-icon>
             Play Chat FAQ
           </b-dropdown-item-button>
@@ -46,9 +46,9 @@
     <b-row>
       <b-col cols="12" md="12" sm="12" class="text-center">
         <div class="profile-image" @click="linkProfile">
-          <img src="../../assets/img/luis.jpg" alt="" srcset="" />
-          <h6>User Fullname</h6>
-          <p>@User Name</p>
+          <img :src="urlAPI + getFullUserData[0].user_image" alt="" srcset="" />
+          <h6>{{ getFullUserData[0].user_fullname }}</h6>
+          <p>@{{ getFullUserData[0].user_name }}</p>
         </div>
       </b-col>
     </b-row>
@@ -228,12 +228,47 @@
         </template>
       </b-modal>
     </div>
+    <!-- Modal Searching -->
+    <b-modal ref="my-modal" size="xl" hide-footer title="Invite Friends">
+      <div class="d-block">
+        <h3>Find your friend</h3>
+        <div class="search-friend my-4">
+          <b-row>
+            <b-col cols="12" sm="12" md="12">
+              <input
+                type="text"
+                placeholder="Search your friend by email"
+                style="
+                  width: 100%;
+                  padding: 15px;
+                  border-radius: 10px;
+                  border: none;
+                  border: 1px solid black;
+                  outline: none;
+                "
+                v-model="form.user_email"
+                v-on:keyup.enter="searching(form.user_email)"
+              />
+            </b-col>
+          </b-row>
+        </div>
+        <div class="show-friend my-4">
+          <b-row>
+            <b-col cols="12" md="12" sm="12">
+              <h3>Hasil Searching</h3>
+            </b-col>
+          </b-row>
+        </div>
+      </div>
+    </b-modal>
+    <!-- Modal Searching -->
+    <div></div>
   </div>
 </template>
 
 <script>
 // import axios from 'axios'
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'Sidebar',
@@ -241,21 +276,26 @@ export default {
     return {
       user_id: '',
       urlAPI: process.env.VUE_APP_URL,
-      dataUsers: []
+      dataUsers: [],
+      form: {
+        user_email: ''
+      }
     }
   },
   created() {
     this.getDataUsers()
   },
   methods: {
-    ...mapActions(['userLoginData']),
+    ...mapActions(['userLoginData', 'logout']),
+    ...mapMutations(['searchUsers']),
     getDataUsers() {
       this.userLoginData()
         .then((response) => {
           console.log(response)
+          console.log(response.data[0].user_name)
         })
         .catch((error) => {
-          console.log(error.data.msg)
+          console.log(error.data)
         })
       // axios
       //   .get(`${process.env.VUE_APP_URL}users/${this.users.user_id}`)
@@ -268,14 +308,40 @@ export default {
       //     console.log(error)
       //   })
     },
+    searching(form) {
+      this.searchUsers(form)
+      console.log(this.searchUsers)
+      this.getDataUsers()
+      this.$router.push(`?search=${form}`)
+      // this.changePage(1)
+    },
+    handleLogout() {
+      this.logout()
+    },
+    fitur() {
+      this.boxTwo = ''
+      this.$bvModal.msgBoxOk('Sorry, Fitur is Coming Soon :)', {
+        title: 'Confirmation',
+        size: 'md',
+        buttonSize: 'md',
+        okVariant: 'success',
+        headerClass: 'p-2 border-bottom-0',
+        footerClass: 'p-2 border-top-0',
+        centered: true
+      })
+    },
     linkProfile() {
       this.$router.push('/update-profile')
+    },
+    showModal() {
+      this.$refs['my-modal'].show()
+    },
+    hideModal() {
+      this.$refs['my-modal'].hide()
     }
   },
   computed: {
-    ...mapGetters({
-      users: 'userData'
-    })
+    ...mapGetters(['getFullUserData', 'userData'])
   }
 }
 </script>
