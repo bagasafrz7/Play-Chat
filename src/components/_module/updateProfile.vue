@@ -135,11 +135,7 @@ export default {
     this.getDataUsers()
   },
   methods: {
-    ...mapActions({
-      addUsersForm: 'addUsersForm',
-      userLoginData: 'userLoginData',
-      updateUsers: 'updateUsers'
-    }),
+    ...mapActions(['addUsersForm', 'userLoginData', 'updateUsers']),
     update() {
       // console.log(this.form)
       const data = new FormData()
@@ -150,8 +146,9 @@ export default {
       data.append('user_bio', this.form.user_bio)
       const setData = {
         user_id: this.getFullUserData[0].user_id,
-        form: data
+        form: this.form
       }
+      console.log(setData)
       this.updateUsers(setData)
         .then((response) => {
           // this.inMsg = response.msg

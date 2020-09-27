@@ -23,15 +23,13 @@ export default {
     updateUsers(context, payload) {
       return new Promise((resolve, reject) => {
         axios
-          .patch(
-            `${process.env.VUE_APP_URL}users/${payload.user_id}`, payload.form
-          )
+          .patch(`${process.env.VUE_APP_URL}users/${payload.user_id}`, payload.form)
           .then(response => {
-            // console.log(response)
+            console.log(response)
             resolve(response.data)
           })
           .catch(error => {
-            // console.log(error.response)
+            console.log(error.response)
             reject(error.response)
           })
       })
