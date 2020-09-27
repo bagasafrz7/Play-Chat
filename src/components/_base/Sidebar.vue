@@ -35,6 +35,13 @@
           </b-dropdown-item-button>
           <b-dropdown-item-button
             variant="danger"
+            @click="$bvModal.show('modal-delete')"
+          >
+            <b-icon icon="trash" aria-hidden="true"></b-icon>
+            Delete Account
+          </b-dropdown-item-button>
+          <b-dropdown-item-button
+            variant="danger"
             @click="$bvModal.show('modal-logout')"
           >
             <b-icon icon="power" aria-hidden="true"></b-icon>
@@ -228,6 +235,29 @@
         </template>
       </b-modal>
     </div>
+    <!-- Modal Logout -->
+    <!-- Modal Delete Account -->
+    <div>
+      <b-modal id="modal-delete" centered>
+        <template v-slot:modal-header="{ close }">
+          <!-- Emulate built in modal header close button action -->
+          <h5 style="color: red">Notice</h5>
+          <b-button size="sm" variant="outline" @click="close()">X</b-button>
+        </template>
+
+        <h6>Are you sure you want to permanently delete your account?</h6>
+
+        <template v-slot:modal-footer="{ cancel }">
+          <b-button size="sm" variant="success" @click="deletePermanent()"
+            >OK</b-button
+          >
+          <b-button size="sm" variant="danger" @click="cancel()"
+            >Cancel</b-button
+          >
+        </template>
+      </b-modal>
+    </div>
+    <!-- Modal Delete Account -->
     <!-- Modal Searching -->
     <b-modal ref="my-modal" size="xl" hide-footer title="Invite Friends">
       <div class="d-block">
@@ -286,7 +316,7 @@ export default {
     this.getDataUsers()
   },
   methods: {
-    ...mapActions(['userLoginData', 'logout']),
+    ...mapActions(['userLoginData', 'logout', 'deleteUsers']),
     ...mapMutations(['searchUsers']),
     getDataUsers() {
       this.userLoginData()
@@ -307,6 +337,29 @@ export default {
       //   .catch((error) => {
       //     console.log(error)
       //   })
+    },
+    deletePermanent() {
+      const setData = {
+        user_id: this.getFullUserData[0].user_id
+      }
+      this.deleteUsers(setData)
+        .then((response) => {
+          this.inMsg = response.msg
+          this.makeToast(this.inMsg)
+          // this.$refs['modal-delete'].hide()
+          this.logout()
+          console.log(response)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+    makeToast(variant = '') {
+      this.$bvToast.toast(`${this.inMsg}`, {
+        title: `Notification! ${'' || ''}`,
+        variant: variant,
+        solid: true
+      })
     },
     searching(form) {
       this.searchUsers(form)

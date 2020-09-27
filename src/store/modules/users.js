@@ -38,6 +38,18 @@ export default {
       console.log(payload)
       context.commit('setDataUser', payload)
     },
+    deleteUsers(context, payload) {
+      return new Promise((resolve, reject) => {
+        axios
+          .delete(`${process.env.VUE_APP_URL}users/${payload.user_id}`)
+          .then((response) => {
+            resolve(response.data)
+          })
+          .catch((error) => {
+            reject(error.response)
+          })
+      })
+    },
     searcinghUsers(context, payload) {
       return new Promise((resolve, reject) => {
         axios

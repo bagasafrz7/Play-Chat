@@ -86,8 +86,25 @@
         </b-col>
       </b-row>
     </b-form>
+
     <b-row>
       <b-col cols="12" md="12" sm="12">
+        <div class="maps my-4">
+          <GmapMap
+            :center="coordinate"
+            :zoom="15"
+            map-type-id="terrain"
+            style="width: 300px; height: 300px"
+          >
+            <GmapMarker
+              :position="coordinate"
+              :clickable="true"
+              :draggable="true"
+              @click="clickMarker"
+              icon="https://img.icons8.com/color/48/000000/map-pin.png"
+            />
+          </GmapMap>
+        </div>
         <div class="settings">
           <h5>Setting</h5>
           <b-row>
@@ -128,11 +145,28 @@ export default {
         user_image: '',
         user_phone: '',
         user_bio: ''
+      },
+      inMsg: '',
+      coordinate: {
+        lat: 0,
+        lng: 0
       }
     }
   },
   created() {
     this.getDataUsers()
+    this.$getLocation()
+      .then((coordinates) => {
+        this.coordinate = {
+          lat: coordinates.lat,
+          lng: coordinates.lng
+        }
+        // console.log(coordinates)
+        console.log(this.coordinate)
+      })
+      .catch((error) => {
+        alert(error)
+      })
   },
   methods: {
     ...mapActions(['addUsersForm', 'userLoginData', 'updateUsers']),
@@ -146,23 +180,19 @@ export default {
       data.append('user_bio', this.form.user_bio)
       const setData = {
         user_id: this.getFullUserData[0].user_id,
-        form: this.form
+        form: data
       }
       console.log(setData)
       this.updateUsers(setData)
         .then((response) => {
-          // this.inMsg = response.msg
-          // this.makeToast(this.inMsg)
-          // this.isUpdate = false
-          // this.$refs['add-product'].hide()
-          // this.getProducts()
+          this.inMsg = response.msg
+          this.makeToast(this.inMsg)
+          this.$router.push('/')
           console.log(response)
         })
         .catch((error) => {
-          // this.inMsg = error.data.msg
-          // this.makeToast(this.inMsg)
-          // this.isUpdate = false
-          // this.$refs['add-product'].hide()
+          this.inMsg = error.data.msg
+          this.makeToast(this.inMsg)
           console.log(error)
         })
     },
@@ -186,6 +216,16 @@ export default {
     //   this.user_id = data.user_id
     // console.log(data.product_id)
     // },
+    clickMarker(position) {
+      console.log('clicked')
+      console.log(position)
+      console.log(position.latLng.lat())
+      console.log(position.latLng.lng())
+      this.coordinate = {
+        lat: position.latLng.lat(),
+        lng: position.latLng.lng()
+      }
+    },
     back() {
       this.$router.push('/')
     },
@@ -214,6 +254,13 @@ export default {
         headerClass: 'p-2 border-bottom-0',
         footerClass: 'p-2 border-top-0',
         centered: true
+      })
+    },
+    makeToast(variant = '') {
+      this.$bvToast.toast(`${this.inMsg}`, {
+        title: `Notification! ${'' || ''}`,
+        variant: variant,
+        solid: true
       })
     }
   },
