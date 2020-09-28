@@ -13,7 +13,7 @@
             <b-icon icon="gear-fill" aria-hidden="true"></b-icon>
             Settings
           </b-dropdown-item-button>
-          <b-dropdown-item-button>
+          <b-dropdown-item-button @click="$bvModal.show('modal-list-friend')">
             <b-icon icon="person" aria-hidden="true"></b-icon>
             Contacts
           </b-dropdown-item-button>
@@ -323,6 +323,7 @@
                     font-scale="3"
                     variant="primary"
                     style="cursor: pointer"
+                    @click="addFriend(item)"
                   ></b-icon>
                 </b-col>
               </b-row>
@@ -405,7 +406,8 @@ export default {
       dataUsers: [],
       form: {
         user_email: ''
-      }
+      },
+      inMsg: ''
     }
   },
   created() {
@@ -418,7 +420,8 @@ export default {
       'logout',
       'deleteUsers',
       'searcinghUsers',
-      'getListFriend'
+      'getListFriend',
+      'postFriend'
     ]),
     ...mapMutations(['searchUsers']),
     getFriend() {
@@ -463,6 +466,31 @@ export default {
           console.log(response)
         })
         .catch((error) => {
+          console.log(error)
+        })
+    },
+    addFriend(data) {
+      this.form = {
+        friend_id: data.user_id
+      }
+      const setData = {
+        user_id: this.getFullUserData[0].user_id,
+        friend_id: this.form.friend_id
+      }
+      console.log(setData)
+      this.postFriend(setData)
+        .then((response) => {
+          this.inMsg = response.msg
+          this.makeToast(this.inMsg)
+          this.$refs['my-modal'].hide()
+          this.getListFriend()
+          console.log(response)
+        })
+        .catch((error) => {
+          this.inMsg = error.data.msg
+          this.makeToast(this.inMsg)
+          this.$refs['my-modal'].hide()
+          this.getListFriend()
           console.log(error)
         })
     },

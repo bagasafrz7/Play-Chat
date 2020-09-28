@@ -26,7 +26,23 @@ export default {
           .patch(`${process.env.VUE_APP_URL}users/${payload.user_id}`, payload.form)
           .then(response => {
             console.log(response)
+            context.commit('Msg', response.msg)
             resolve(response.data)
+          })
+          .catch(error => {
+            console.log(error.response)
+            reject(error.response)
+          })
+      })
+    },
+    postFriend(context, payload) {
+      return new Promise((resolve, reject) => {
+        axios
+          .post(`${process.env.VUE_APP_URL}list-friend/friend`, payload)
+          .then(response => {
+            console.log(response)
+            resolve(response.data)
+            context.commit('Msg', response.msg)
           })
           .catch(error => {
             console.log(error.response)
