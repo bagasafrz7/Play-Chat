@@ -65,7 +65,9 @@
         <b-icon icon="search"></b-icon>
       </b-col>
       <b-col cols="2" md="2" sm="2">
-        <p>+</p>
+        <p @click="$bvModal.show('modal-list-friend')" style="cursor: pointer">
+          +
+        </p>
       </b-col>
     </b-row>
     <b-row class="detail-akses">
@@ -259,7 +261,13 @@
     </div>
     <!-- Modal Delete Account -->
     <!-- Modal Searching -->
-    <b-modal ref="my-modal" size="xl" hide-footer title="Invite Friends">
+    <b-modal
+      ref="my-modal"
+      size="xl"
+      scrollable
+      hide-footer
+      title="Invite Friends"
+    >
       <div class="d-block">
         <h3>Find your friend</h3>
         <div class="search-friend my-4">
@@ -284,14 +292,102 @@
         </div>
         <div class="show-friend my-4">
           <b-row>
-            <b-col cols="12" md="12" sm="12">
-              <h3>Hasil Searching</h3>
+            <h3 class="my-4 pl-4 ml-4">Hasil Searching</h3>
+            <b-col
+              cols="12"
+              md="12"
+              sm="12"
+              v-for="(item, index) in getSearchUsers"
+              :key="index"
+            >
+              <hr />
+              <b-row style="padding: 0 50px">
+                <b-col cols="2" md="2" sm="2">
+                  <img
+                    :src="urlAPI + item.user_image"
+                    alt=""
+                    srcset=""
+                    style="width: 150px; height: 150px; border-radius: 20px"
+                  />
+                </b-col>
+                <b-col cols="4" md="4" sm="4">
+                  <h4 class="mb-2">{{ item.user_fullname }}</h4>
+                  <p>@{{ item.user_name }}</p>
+                  <p>{{ item.user_email }}</p>
+                  <p>{{ item.user_phone }}</p>
+                </b-col>
+                <b-col cols="6" md="6" sm="6" class="text-right">
+                  <b-icon
+                    icon="person-plus"
+                    aria-hidden="true"
+                    font-scale="3"
+                    variant="primary"
+                    style="cursor: pointer"
+                  ></b-icon>
+                </b-col>
+              </b-row>
             </b-col>
           </b-row>
         </div>
       </div>
     </b-modal>
     <!-- Modal Searching -->
+    <!-- Modal List Friend -->
+    <div>
+      <b-modal id="modal-list-friend" scrollable size="xl">
+        <template v-slot:modal-header="{ close }">
+          <!-- Emulate built in modal header close button action -->
+          <h5>Notice</h5>
+          <b-button size="sm" variant="outline" @click="close()">X</b-button>
+        </template>
+
+        <h2 class="ml-4 pl-4">List Your Friend</h2>
+        <b-row>
+          <b-col
+            cols="12"
+            md="12"
+            sm="12"
+            v-for="(item, index) in getDataFriend"
+            :key="index"
+            class="my-4"
+          >
+            <b-row style="padding: 0 50px">
+              <b-col cols="2" md="2" sm="2">
+                <img
+                  :src="urlAPI + item.user_image"
+                  alt=""
+                  srcset=""
+                  style="width: 150px; height: 150px; border-radius: 20px"
+                />
+              </b-col>
+              <b-col cols="4" md="4" sm="4">
+                <h4 class="mb-2">{{ item.user_fullname }}</h4>
+                <p>@{{ item.user_name }}</p>
+                <p>{{ item.user_email }}</p>
+                <p>{{ item.user_phone }}</p>
+                <p>{{ item.user_bio }}</p>
+              </b-col>
+              <b-col cols="6" md="6" sm="6" class="text-right">
+                <b-icon
+                  icon="chat-dots"
+                  aria-hidden="true"
+                  font-scale="3"
+                  variant="primary"
+                  style="cursor: pointer"
+                ></b-icon>
+              </b-col>
+            </b-row>
+          </b-col>
+        </b-row>
+
+        <template v-slot:modal-footer="{ cancel }">
+          <b-button size="sm" variant="danger" @click="cancel()"
+            >Close</b-button
+          >
+        </template>
+      </b-modal>
+    </div>
+    <!-- Modal List Friend -->
     <div></div>
   </div>
 </template>
@@ -314,10 +410,26 @@ export default {
   },
   created() {
     this.getDataUsers()
+    this.getListFriend()
   },
   methods: {
-    ...mapActions(['userLoginData', 'logout', 'deleteUsers']),
+    ...mapActions([
+      'userLoginData',
+      'logout',
+      'deleteUsers',
+      'searcinghUsers',
+      'getListFriend'
+    ]),
     ...mapMutations(['searchUsers']),
+    getFriend() {
+      this.getListFriend()
+        .then((response) => {
+          console.log(response)
+        })
+        .catch((error) => {
+          console.log(error.data)
+        })
+    },
     getDataUsers() {
       this.userLoginData()
         .then((response) => {
@@ -362,9 +474,10 @@ export default {
       })
     },
     searching(form) {
-      this.searchUsers(form)
-      console.log(this.searchUsers)
-      this.getDataUsers()
+      console.log(form)
+      this.searcinghUsers(form)
+      // console.log(this.searchUsers(form))
+      // this.getDataUsers()
       this.$router.push(`?search=${form}`)
       // this.changePage(1)
     },
@@ -394,7 +507,12 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getFullUserData', 'userData'])
+    ...mapGetters([
+      'getFullUserData',
+      'userData',
+      'getSearchUsers',
+      'getDataFriend'
+    ])
   }
 }
 </script>

@@ -4,19 +4,23 @@ export default {
   state: {
     dataUsers: {},
     dataUser: {},
+    dataFriend: {},
     search: '',
     limit: 50
   },
   mutations: {
     setDataUsers(state, payload) {
       state.dataUsers = payload
-      console.log(payload)
+      // console.log(payload)
     },
     setDataUser(state, payload) {
       state.dataUser = payload
     },
     searchUsers(state, payload) {
-      state.search = payload
+      state.search = payload.data.result
+    },
+    setDataFriend(state, payload) {
+      state.dataFriend = payload.data
     }
   },
   actions: {
@@ -51,15 +55,34 @@ export default {
       })
     },
     searcinghUsers(context, payload) {
+      // console.log(payload)
       return new Promise((resolve, reject) => {
         axios
           .get(
-            `${process.env.VUE_APP_URL}users/search?search=${context.state.search}&limit=${context.state.limit}`
+            `${process.env.VUE_APP_URL}users/search?search=${payload}&limit=${context.state.limit}`
           )
           .then(response => {
             context.commit('searchUsers', response.data)
+            resolve(response.data)
+            // console.log(response.data)
           })
           .catch(error => {
+            reject(error.response)
+            console.log(error.data.msg)
+          })
+      })
+    },
+    getListFriend(context, payload) {
+      return new Promise((resolve, reject) => {
+        axios
+          .get(`${process.env.VUE_APP_URL}list-friend?page=${payload}&limit=${context.state.limit}`)
+          .then(response => {
+            context.commit('setDataFriend', response.data)
+            resolve(response.data)
+            // console.log(response.data)
+          })
+          .catch(error => {
+            reject(error.response)
             console.log(error.data.msg)
           })
       })
@@ -67,7 +90,11 @@ export default {
   },
   getters: {
     getSearchUsers(state) {
+      // console.log(state.search)
       return state.search
+    },
+    getDataFriend(state) {
+      return state.dataFriend
     }
   }
 }
