@@ -6,12 +6,16 @@ export default ({
     msg: '',
     inMsg: '',
     user: {},
+    dataFriend: {},
     token: localStorage.getItem('token') || null,
     fullData: {}
   },
   mutations: {
     setFullUserData(state, payload) {
       state.fullData = payload
+    },
+    setDataFriend(state, payload) {
+      state.dataFriend = payload.data
     },
     setUser(state, payload) {
       state.user = payload
@@ -40,6 +44,21 @@ export default ({
             } else {
               reject(error.response)
             }
+          })
+      })
+    },
+    getListFriend(context, payload) {
+      return new Promise((resolve, reject) => {
+        axios
+          .get(`${process.env.VUE_APP_URL}list-friend/${context.state.user.user_id}`)
+          .then(response => {
+            context.commit('setDataFriend', response.data)
+            resolve(response.data)
+            // console.log(response.data)
+          })
+          .catch(error => {
+            reject(error.response)
+            console.log(error.data.msg)
           })
       })
     },
@@ -118,6 +137,9 @@ export default ({
   getters: {
     getFullUserData(state) {
       return state.fullData
+    },
+    getDataFriend(state) {
+      return state.dataFriend
     },
     isLogin(state) {
       return state.token !== null
