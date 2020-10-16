@@ -4,6 +4,7 @@ export default {
   state: {
     dataUsers: {},
     dataUser: {},
+    dataFriendId: {},
     search: '',
     limit: 50
   },
@@ -17,6 +18,9 @@ export default {
     },
     searchUsers(state, payload) {
       state.search = payload.data.result
+    },
+    getFriendId(state, payload) {
+      state.dataFriendId = payload
     }
   },
   actions: {
@@ -83,12 +87,32 @@ export default {
             console.log(error.data.msg)
           })
       })
+    },
+    getFriendById(context, payload) {
+      return new Promise((resolve, reject) => {
+        axios
+          .get(
+            `${process.env.VUE_APP_URL}users/${payload}`
+          )
+          .then(response => {
+            context.commit('getFriendId', response.data)
+            resolve(response.data)
+            console.log(response.data)
+          })
+          .catch(error => {
+            reject(error.response)
+            console.log(error.data.msg)
+          })
+      })
     }
   },
   getters: {
     getSearchUsers(state) {
       // console.log(state.search)
       return state.search
+    },
+    getFriendFriends(state) {
+      return state.dataFriendId
     }
   }
 }

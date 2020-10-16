@@ -121,7 +121,7 @@ export default {
   name: 'MainChat',
   data() {
     return {
-      chat: true
+      chat: false
     }
   }
 }

@@ -335,7 +335,12 @@
     <!-- Modal Searching -->
     <!-- Modal List Friend -->
     <div>
-      <b-modal id="modal-list-friend" scrollable size="xl">
+      <b-modal
+        id="modal-list-friend"
+        ref="modal-list-friend"
+        scrollable
+        size="xl"
+      >
         <template v-slot:modal-header="{ close }">
           <!-- Emulate built in modal header close button action -->
           <h5>Notice</h5>
@@ -355,18 +360,34 @@
             <b-row style="padding: 0 50px">
               <b-col cols="2" md="2" sm="2">
                 <img
+                  v-b-toggle.sidebar-right
+                  @click="profileFriend()"
                   :src="urlAPI + item.user_image"
                   alt=""
                   srcset=""
-                  style="width: 150px; height: 150px; border-radius: 20px"
+                  style="
+                    width: 150px;
+                    height: 150px;
+                    border-radius: 20px;
+                    cursor: pointer;
+                    outline: none;
+                  "
                 />
               </b-col>
-              <b-col cols="4" md="4" sm="4">
+              <b-col
+                cols="4"
+                md="4"
+                sm="4"
+                v-b-toggle.sidebar-right
+                @click="profileFriend()"
+                style="cursor: pointer; outline: none"
+              >
                 <h4 class="mb-2">{{ item.user_fullname }}</h4>
                 <p>@{{ item.user_name }}</p>
                 <p>{{ item.user_email }}</p>
                 <p>{{ item.user_phone }}</p>
                 <p>{{ item.user_bio }}</p>
+                <!-- <b-button v-b-toggle.sidebar-right>Toggle Sidebar</b-button> -->
               </b-col>
               <b-col cols="6" md="6" sm="6" class="text-right">
                 <b-icon
@@ -389,6 +410,28 @@
       </b-modal>
     </div>
     <!-- Modal List Friend -->
+    <!-- Sidebar Profile Friend -->
+    <b-sidebar id="sidebar-right" right shadow>
+      <div class="px-3 py-2">
+        <h4 class="mb-4 text-center">@user_email</h4>
+        <div class="img-friend text-center mb-2">
+          <b-img
+            src="https://picsum.photos/500/500/?image=54"
+            style="width: 100px; height: 100px; border-radius: 20px"
+            fluid
+            thumbnail
+          ></b-img>
+        </div>
+        <h4>User Full Name</h4>
+        <p>Online</p>
+        <h4>Phone Number</h4>
+        <p>User Phone</p>
+        <hr />
+        <h4>Location</h4>
+        <p>Maps</p>
+      </div>
+    </b-sidebar>
+    <!-- Sidebar Profile Friend -->
     <div></div>
   </div>
 </template>
@@ -421,7 +464,8 @@ export default {
       'deleteUsers',
       'searcinghUsers',
       'getListFriend',
-      'postFriend'
+      'postFriend',
+      'getFriendById'
     ]),
     ...mapMutations(['searchUsers']),
     getFriend() {
@@ -510,7 +554,21 @@ export default {
       // this.changePage(1)
     },
     handleLogout() {
-      this.logout()
+      this.$swal
+        .fire({
+          title: 'Logout Account?',
+          icon: 'warning',
+          showDenyButton: true,
+          showCancelButton: true,
+          confirmButtonText: 'Yes',
+          denyButtonText: 'Cancel'
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            this.$swal.fire('See you again!', '', 'success')
+            this.logout()
+          }
+        })
     },
     fitur() {
       this.boxTwo = ''
@@ -523,6 +581,9 @@ export default {
         footerClass: 'p-2 border-top-0',
         centered: true
       })
+    },
+    profileFriend() {
+      this.$refs['modal-list-friend'].hide()
     },
     linkProfile() {
       this.$router.push('/update-profile')

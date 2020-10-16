@@ -54,7 +54,7 @@ export default ({
           .then(response => {
             context.commit('setDataFriend', response.data)
             resolve(response.data)
-            // console.log(response.data)
+            console.log(response.data)
           })
           .catch(error => {
             reject(error.response)

@@ -12,7 +12,11 @@
               </b-col>-->
               <h6>Let's create you account</h6>
               <b-form @submit.prevent="postUser">
-                <b-form-group id="input-group-3" label="Name" label-for="input-3">
+                <b-form-group
+                  id="input-group-3"
+                  label="Name"
+                  label-for="input-3"
+                >
                   <b-form-input
                     id="input-3"
                     type="text"
@@ -22,11 +26,25 @@
                   ></b-form-input>
                 </b-form-group>
 
-                <b-form-group id="input-group-1" label="Email" label-for="input-1">
-                  <b-form-input id="input-1" type="email" v-model="form.user_email" required placeholder="Enter Your Email"></b-form-input>
+                <b-form-group
+                  id="input-group-1"
+                  label="Email"
+                  label-for="input-1"
+                >
+                  <b-form-input
+                    id="input-1"
+                    type="email"
+                    v-model="form.user_email"
+                    required
+                    placeholder="Enter Your Email"
+                  ></b-form-input>
                 </b-form-group>
 
-                <b-form-group id="input-group-2" label="Password" label-for="input-2">
+                <b-form-group
+                  id="input-group-2"
+                  label="Password"
+                  label-for="input-2"
+                >
                   <b-form-input
                     id="input-2"
                     type="password"
@@ -36,7 +54,9 @@
                   ></b-form-input>
                 </b-form-group>
 
-                <b-button type="submit" class="btn-login" variant="primary">Register</b-button>
+                <b-button type="submit" class="btn-login" variant="primary"
+                  >Register</b-button
+                >
                 <b-row class="my-4">
                   <b-col cols="4" md="4" sm="4">
                     <hr />
@@ -53,7 +73,8 @@
                   variant="primary"
                   @click="showMessageGoogle"
                   class="btn-google"
-                >Google</b-button>
+                  >Google</b-button
+                >
               </b-form>
             </div>
           </b-col>
@@ -91,10 +112,27 @@ export default {
       this.addUsers(this.form)
         .then((response) => {
           console.log(response)
+          this.$swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: response.msg,
+            showConfirmButton: false,
+            timer: 1500
+          })
+          setTimeout(() => {
+            this.$router.push('/login')
+          }, 1000)
         })
         .catch((error) => {
-          this.inMsg = error.data.msg
-          this.makeToast(this.inMsg)
+          this.$swal.fire({
+            position: 'center',
+            icon: 'error',
+            title: error.data.msg,
+            showConfirmButton: false,
+            timer: 1500
+          })
+          // this.inMsg = error.data.msg
+          // this.makeToast(this.inMsg)
           // console.log(error.data.msg)
         })
     },

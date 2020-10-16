@@ -101,11 +101,27 @@ export default {
       this.login(this.form)
         .then((result) => {
           // console.log(result)
-          this.$router.push('/')
+          this.$swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: result.msg,
+            showConfirmButton: false,
+            timer: 1500
+          })
+          setTimeout(() => {
+            this.$router.push('/')
+          }, 1000)
         })
         .catch((error) => {
-          this.inMsg = error.data.msg
-          this.makeToast(this.inMsg)
+          // this.inMsg = error.data.msg
+          this.$swal.fire({
+            position: 'center',
+            icon: 'error',
+            title: error.data.msg,
+            showConfirmButton: false,
+            timer: 1500
+          })
+          // this.makeToast(this.inMsg)
           // console.log(error)
         })
     },
