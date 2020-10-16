@@ -5,6 +5,7 @@ export default {
     dataUsers: {},
     dataUser: {},
     dataFriendId: {},
+    dataFriensID: {},
     search: '',
     limit: 50
   },
@@ -21,6 +22,10 @@ export default {
     },
     getFriendId(state, payload) {
       state.dataFriendId = payload
+    },
+    setFriends(state, payload) {
+      state.dataFriensID = payload[0]
+      // console.log(payload[0])
     }
   },
   actions: {
@@ -88,6 +93,21 @@ export default {
           })
       })
     },
+    getFriendID(context, payload) {
+      return new Promise((resolve, reject) => {
+        axios
+          .get(`${process.env.VUE_APP_URL}list-friend/friends/${payload}`)
+          .then(response => {
+            context.commit('setFriends', response.data.data)
+            resolve(response.data.data)
+            console.log(response.data.data[0])
+          })
+          .catch(error => {
+            reject(error.response)
+            console.log(error.data)
+          })
+      })
+    },
     getFriendById(context, payload) {
       return new Promise((resolve, reject) => {
         axios
@@ -113,6 +133,9 @@ export default {
     },
     getFriendFriends(state) {
       return state.dataFriendId
+    },
+    getFriends(state) {
+      return state.dataFriensID
     }
   }
 }

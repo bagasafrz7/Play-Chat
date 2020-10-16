@@ -82,128 +82,18 @@
       </b-col>
     </b-row>
     <div class="list-chatting">
-      <b-row>
+      <b-row
+        v-for="(value, index) in getDataRoomList"
+        :key="index"
+        @click="getRoomMessage()"
+      >
         <b-col cols="3" md="3" sm="3">
-          <img src="../../assets/img/luis.jpg" alt="" srcset="" />
+          <img :src="urlAPI + value.user_image" alt="" srcset="" />
         </b-col>
         <b-col cols="9" md="9" sm="9">
           <b-row>
             <b-col cols="8" md="8" sm="8">
-              <h5>User Fullname</h5>
-              <p>Content Message</p>
-            </b-col>
-            <b-col cols="4" md="4" sm="4">
-              <h6>15.20</h6>
-              <p>
-                <b-badge variant="primary">2</b-badge>
-              </p>
-            </b-col>
-          </b-row>
-        </b-col>
-      </b-row>
-      <b-row>
-        <b-col cols="3" md="3" sm="3">
-          <img src="../../assets/img/luis.jpg" alt="" srcset="" />
-        </b-col>
-        <b-col cols="9" md="9" sm="9">
-          <b-row>
-            <b-col cols="8" md="8" sm="8">
-              <h5>User Fullname</h5>
-              <p>Content Message</p>
-            </b-col>
-            <b-col cols="4" md="4" sm="4">
-              <h6>15.20</h6>
-              <p>
-                <b-badge variant="primary">2</b-badge>
-              </p>
-            </b-col>
-          </b-row>
-        </b-col>
-      </b-row>
-      <b-row>
-        <b-col cols="3" md="3" sm="3">
-          <img src="../../assets/img/luis.jpg" alt="" srcset="" />
-        </b-col>
-        <b-col cols="9" md="9" sm="9">
-          <b-row>
-            <b-col cols="8" md="8" sm="8">
-              <h5>User Fullname</h5>
-              <p>Content Message</p>
-            </b-col>
-            <b-col cols="4" md="4" sm="4">
-              <h6>15.20</h6>
-              <p>
-                <b-badge variant="primary">2</b-badge>
-              </p>
-            </b-col>
-          </b-row>
-        </b-col>
-      </b-row>
-      <b-row>
-        <b-col cols="3" md="3" sm="3">
-          <img src="../../assets/img/luis.jpg" alt="" srcset="" />
-        </b-col>
-        <b-col cols="9" md="9" sm="9">
-          <b-row>
-            <b-col cols="8" md="8" sm="8">
-              <h5>User Fullname</h5>
-              <p>Content Message</p>
-            </b-col>
-            <b-col cols="4" md="4" sm="4">
-              <h6>15.20</h6>
-              <p>
-                <b-badge variant="primary">2</b-badge>
-              </p>
-            </b-col>
-          </b-row>
-        </b-col>
-      </b-row>
-      <b-row>
-        <b-col cols="3" md="3" sm="3">
-          <img src="../../assets/img/luis.jpg" alt="" srcset="" />
-        </b-col>
-        <b-col cols="9" md="9" sm="9">
-          <b-row>
-            <b-col cols="8" md="8" sm="8">
-              <h5>User Fullname</h5>
-              <p>Content Message</p>
-            </b-col>
-            <b-col cols="4" md="4" sm="4">
-              <h6>15.20</h6>
-              <p>
-                <b-badge variant="primary">2</b-badge>
-              </p>
-            </b-col>
-          </b-row>
-        </b-col>
-      </b-row>
-      <b-row>
-        <b-col cols="3" md="3" sm="3">
-          <img src="../../assets/img/luis.jpg" alt="" srcset="" />
-        </b-col>
-        <b-col cols="9" md="9" sm="9">
-          <b-row>
-            <b-col cols="8" md="8" sm="8">
-              <h5>User Fullname</h5>
-              <p>Content Message</p>
-            </b-col>
-            <b-col cols="4" md="4" sm="4">
-              <h6>15.20</h6>
-              <p>
-                <b-badge variant="primary">2</b-badge>
-              </p>
-            </b-col>
-          </b-row>
-        </b-col>
-      </b-row>
-      <b-row>
-        <b-col cols="3" md="3" sm="3">
-          <img src="../../assets/img/luis.jpg" alt="" srcset="" />
-        </b-col>
-        <b-col cols="9" md="9" sm="9">
-          <b-row>
-            <b-col cols="8" md="8" sm="8">
-              <h5>User Fullname</h5>
+              <h5>{{ value.user_fullname }}</h5>
               <p>Content Message</p>
             </b-col>
             <b-col cols="4" md="4" sm="4">
@@ -361,7 +251,7 @@
               <b-col cols="2" md="2" sm="2">
                 <img
                   v-b-toggle.sidebar-right
-                  @click="profileFriend()"
+                  @click="profileFriend(item)"
                   :src="urlAPI + item.user_image"
                   alt=""
                   srcset=""
@@ -379,7 +269,7 @@
                 md="4"
                 sm="4"
                 v-b-toggle.sidebar-right
-                @click="profileFriend()"
+                @click="profileFriend(item)"
                 style="cursor: pointer; outline: none"
               >
                 <h4 class="mb-2">{{ item.user_fullname }}</h4>
@@ -396,6 +286,7 @@
                   font-scale="3"
                   variant="primary"
                   style="cursor: pointer"
+                  @click="addRoom(item)"
                 ></b-icon>
               </b-col>
             </b-row>
@@ -413,19 +304,19 @@
     <!-- Sidebar Profile Friend -->
     <b-sidebar id="sidebar-right" right shadow>
       <div class="px-3 py-2">
-        <h4 class="mb-4 text-center">@user_email</h4>
+        <h4 class="mb-4 text-center">@{{ getFriends.user_name }}</h4>
         <div class="img-friend text-center mb-2">
           <b-img
-            src="https://picsum.photos/500/500/?image=54"
+            :src="urlAPI + getFriends.user_image"
             style="width: 100px; height: 100px; border-radius: 20px"
             fluid
             thumbnail
           ></b-img>
         </div>
-        <h4>User Full Name</h4>
+        <h4>{{ getFriends.user_fullname }}</h4>
         <p>Online</p>
         <h4>Phone Number</h4>
-        <p>User Phone</p>
+        <p>{{ getFriends.user_phone }}</p>
         <hr />
         <h4>Location</h4>
         <p>Maps</p>
@@ -456,6 +347,17 @@ export default {
   created() {
     this.getDataUsers()
     this.getListFriend()
+    this.getDataRoom()
+  },
+  computed: {
+    ...mapGetters([
+      'getFullUserData',
+      'userData',
+      'getSearchUsers',
+      'getDataFriend',
+      'getDataRoomList',
+      'getFriends'
+    ])
   },
   methods: {
     ...mapActions([
@@ -465,7 +367,10 @@ export default {
       'searcinghUsers',
       'getListFriend',
       'postFriend',
-      'getFriendById'
+      'getFriendById',
+      'getRoomList',
+      'postRoom',
+      'getFriendID'
     ]),
     ...mapMutations(['searchUsers']),
     getFriend() {
@@ -481,7 +386,6 @@ export default {
       this.userLoginData()
         .then((response) => {
           console.log(response)
-          console.log(response.data[0].user_name)
         })
         .catch((error) => {
           console.log(error.data)
@@ -538,6 +442,54 @@ export default {
           console.log(error)
         })
     },
+    addRoom(data) {
+      this.form = {
+        friend_id: data.friend_id
+      }
+      const setData = {
+        sender_id: this.getFullUserData[0].user_id,
+        friend_id: this.form.friend_id
+      }
+      // console.log(setData)
+      this.postRoom(setData)
+        .then((response) => {
+          this.$swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: response.msg,
+            showConfirmButton: false,
+            timer: 1500
+          })
+          setTimeout(() => {
+            this.$refs['modal-list-friend'].hide()
+          }, 1)
+          this.getDataRoom()
+        })
+        .catch((error) => {
+          this.$swal.fire({
+            position: 'center',
+            icon: 'error',
+            title: error.data.msg,
+            showConfirmButton: false,
+            timer: 1500
+          })
+          setTimeout(() => {
+            this.$refs['modal-list-friend'].hide()
+          }, 1)
+          this.getDataRoom()
+        })
+    },
+    getDataRoom() {
+      const setData = {
+        user_id: this.getFullUserData[0].user_id
+      }
+      // console.log(setData)
+      this.getRoomList(setData.user_id)
+    },
+    getRoomMessage() {
+      this.chat = false
+      console.log('Get Message')
+    },
     makeToast(variant = '') {
       this.$bvToast.toast(`${this.inMsg}`, {
         title: `Notification! ${'' || ''}`,
@@ -582,8 +534,13 @@ export default {
         centered: true
       })
     },
-    profileFriend() {
+    profileFriend(data) {
       this.$refs['modal-list-friend'].hide()
+      const setData = {
+        friend_id: data.friend_id
+      }
+      // console.log(setData)
+      this.getFriendID(setData.friend_id)
     },
     linkProfile() {
       this.$router.push('/update-profile')
@@ -594,14 +551,6 @@ export default {
     hideModal() {
       this.$refs['my-modal'].hide()
     }
-  },
-  computed: {
-    ...mapGetters([
-      'getFullUserData',
-      'userData',
-      'getSearchUsers',
-      'getDataFriend'
-    ])
   }
 }
 </script>
