@@ -1,111 +1,220 @@
 <template>
   <div class="sidebar">
-    <b-row class="title">
-      <b-col cols="6" md="6" sm="6">
-        <h4>Play Chat</h4>
-      </b-col>
-      <b-col cols="6" md="6" sm="6" class="text-right">
-        <b-dropdown right variant="outline-primary">
-          <template v-slot:button-content>
-            <b-icon icon="text-left" aria-hidden="true"></b-icon>
-          </template>
-          <b-dropdown-item-button @click="fitur">
-            <b-icon icon="gear-fill" aria-hidden="true"></b-icon>
-            Settings
-          </b-dropdown-item-button>
-          <b-dropdown-item-button @click="$bvModal.show('modal-list-friend')">
-            <b-icon icon="person" aria-hidden="true"></b-icon>
-            Contacts
-          </b-dropdown-item-button>
-          <b-dropdown-item-button @click="fitur">
-            <b-icon icon="telephone" aria-hidden="true"></b-icon>
-            Calls
-          </b-dropdown-item-button>
-          <b-dropdown-item-button @click="fitur">
-            <b-icon icon="bookmark" aria-hidden="true"></b-icon>
-            Save Messages
-          </b-dropdown-item-button>
-          <b-dropdown-item-button @click="showModal">
-            <b-icon icon="person-plus" aria-hidden="true"></b-icon>
-            Invite Friends
-          </b-dropdown-item-button>
-          <b-dropdown-item-button @click="fitur">
-            <b-icon icon="question-circle" aria-hidden="true"></b-icon>
-            Play Chat FAQ
-          </b-dropdown-item-button>
-          <b-dropdown-item-button
-            variant="danger"
-            @click="$bvModal.show('modal-delete')"
-          >
-            <b-icon icon="trash" aria-hidden="true"></b-icon>
-            Delete Account
-          </b-dropdown-item-button>
-          <b-dropdown-item-button
-            variant="danger"
-            @click="$bvModal.show('modal-logout')"
-          >
-            <b-icon icon="power" aria-hidden="true"></b-icon>
-            Logout
-          </b-dropdown-item-button>
-        </b-dropdown>
-      </b-col>
-    </b-row>
     <b-row>
-      <b-col cols="12" md="12" sm="12" class="text-center">
-        <div class="profile-image" @click="linkProfile">
-          <img :src="urlAPI + getFullUserData[0].user_image" alt="" srcset="" />
-          <h6>{{ getFullUserData[0].user_fullname }}</h6>
-          <p>@{{ getFullUserData[0].user_name }}</p>
+      <b-col cols="12" md="3" class="sidebar-main">
+        <b-row class="title">
+          <b-col cols="6" md="6" sm="6">
+            <h4>Play Chat</h4>
+          </b-col>
+          <b-col cols="6" md="6" sm="6" class="text-right">
+            <b-dropdown right variant="outline-primary">
+              <template v-slot:button-content>
+                <b-icon icon="text-left" aria-hidden="true"></b-icon>
+              </template>
+              <b-dropdown-item-button @click="fitur">
+                <b-icon icon="gear-fill" aria-hidden="true"></b-icon>
+                Settings
+              </b-dropdown-item-button>
+              <b-dropdown-item-button
+                @click="$bvModal.show('modal-list-friend')"
+              >
+                <b-icon icon="person" aria-hidden="true"></b-icon>
+                Contacts
+              </b-dropdown-item-button>
+              <b-dropdown-item-button @click="fitur">
+                <b-icon icon="telephone" aria-hidden="true"></b-icon>
+                Calls
+              </b-dropdown-item-button>
+              <b-dropdown-item-button @click="fitur">
+                <b-icon icon="bookmark" aria-hidden="true"></b-icon>
+                Save Messages
+              </b-dropdown-item-button>
+              <b-dropdown-item-button @click="showModal">
+                <b-icon icon="person-plus" aria-hidden="true"></b-icon>
+                Invite Friends
+              </b-dropdown-item-button>
+              <b-dropdown-item-button @click="fitur">
+                <b-icon icon="question-circle" aria-hidden="true"></b-icon>
+                Play Chat FAQ
+              </b-dropdown-item-button>
+              <b-dropdown-item-button
+                variant="danger"
+                @click="$bvModal.show('modal-delete')"
+              >
+                <b-icon icon="trash" aria-hidden="true"></b-icon>
+                Delete Account
+              </b-dropdown-item-button>
+              <b-dropdown-item-button
+                variant="danger"
+                @click="$bvModal.show('modal-logout')"
+              >
+                <b-icon icon="power" aria-hidden="true"></b-icon>
+                Logout
+              </b-dropdown-item-button>
+            </b-dropdown>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col cols="12" md="12" sm="12" class="text-center">
+            <div class="profile-image" @click="linkProfile">
+              <img
+                :src="urlAPI + getFullUserData[0].user_image"
+                alt=""
+                srcset=""
+              />
+              <h6>{{ getFullUserData[0].user_fullname }}</h6>
+              <p>@{{ getFullUserData[0].user_name }}</p>
+            </div>
+          </b-col>
+        </b-row>
+        <b-row class="search">
+          <b-col cols="10" md="10" sm="10">
+            <b-form-input placeholder="Type your message..."></b-form-input>
+            <b-icon icon="search"></b-icon>
+          </b-col>
+          <b-col cols="2" md="2" sm="2">
+            <p
+              @click="$bvModal.show('modal-list-friend')"
+              style="cursor: pointer"
+            >
+              +
+            </p>
+          </b-col>
+        </b-row>
+        <b-row class="detail-akses">
+          <b-col cols="4" md="4" sm="4" class="all">
+            <h6>All</h6>
+          </b-col>
+          <b-col cols="4" md="4" sm="4" class="read">
+            <h6>Read</h6>
+          </b-col>
+          <b-col cols="4" md="4" sm="4" class="unread">
+            <h6>Unread</h6>
+          </b-col>
+        </b-row>
+        <div class="list-chatting">
+          <b-row
+            v-for="(value, index) in getDataRoomList"
+            :key="index"
+            @click="getRoomMessage(value), postMessage(value)"
+          >
+            <b-col cols="3" md="3" sm="3">
+              <img :src="urlAPI + value.user_image" alt="" srcset="" />
+            </b-col>
+            <b-col cols="9" md="9" sm="9" class="select-room">
+              <b-row>
+                <b-col cols="8" md="8" sm="8">
+                  <h5>{{ value.user_fullname }}</h5>
+                  <p>Content Message</p>
+                </b-col>
+                <b-col cols="4" md="4" sm="4">
+                  <h6>{{ value.roomchat_crated_at.slice(12, 16) }}</h6>
+                </b-col>
+              </b-row>
+            </b-col>
+          </b-row>
+        </div>
+      </b-col>
+      <b-col cols="12" md="9">
+        <b-row class="chat">
+          <b-col cols="12" md="12" sm="12">
+            <div class="no-chat" v-show="chat === false">
+              <p>Please select a chat to start messaging</p>
+            </div>
+          </b-col>
+        </b-row>
+        <div class="in-chat" v-show="chat">
+          <header>
+            <b-row>
+              <b-col cols="1" md="1" sm="1">
+                <!-- <img
+                  :src="urlAPI + getDataMessage[0].user_image"
+                  alt=""
+                  srcset=""
+                /> -->
+              </b-col>
+              <b-col cols="10" md="10" sm="10">
+                <!-- <h6>{{ getDataMessage[0].user_fullname }}</h6> -->
+                <p>Online</p>
+              </b-col>
+              <b-col cols="1" md="1" sm="1">
+                <b-icon icon="menu-button-wide"></b-icon>
+              </b-col>
+            </b-row>
+          </header>
+          <div class="main-chat">
+            <b-row>
+              <b-col
+                cols="12"
+                md="12"
+                sm="12"
+                class="text-left"
+                v-for="(value, index) in getDataMessage"
+                :key="index"
+              >
+                <div
+                  class="receiver"
+                  v-if="value.receiver_id != getFullUserData[0].user_id"
+                >
+                  <b-row>
+                    <!-- <b-col cols="1" sm="1" md="1">
+                    </b-col> -->
+                    <b-col cols="12" sm="12" md="12">
+                      <!-- <div class="float-right">
+                        <img
+                          :src="urlAPI + value.user_image"
+                          alt=""
+                          srcset=""
+                        />
+                      </div> -->
+                      <div class="content-chat float-right">
+                        <p>
+                          {{ value.message }}
+                        </p>
+                      </div>
+                    </b-col>
+                  </b-row>
+                </div>
+                <div
+                  class="sender"
+                  v-if="value.receiver_id === getFullUserData[0].user_id"
+                >
+                  <b-row>
+                    <!-- <b-col cols="1" sm="1" md="1">
+                      <img :src="urlAPI + value.user_image" alt="" srcset="" />
+                    </b-col> -->
+                    <b-col cols="11" sm="11" md="11">
+                      <div class="content-chat">
+                        <p>
+                          {{ value.message }}
+                        </p>
+                      </div>
+                    </b-col>
+                  </b-row>
+                </div>
+              </b-col>
+            </b-row>
+          </div>
+          <footer>
+            <b-row>
+              <b-col cols="12" md="12" sm="12">
+                <div class="send-chat">
+                  <b-icon icon="plus" class="plus"></b-icon>
+                  <b-icon icon="emoji-laughing" class="emoticon"></b-icon>
+                  <b-icon icon="dice1-fill" class="picture"></b-icon>
+                  <input
+                    type="text"
+                    v-model="forms.message"
+                    placeholder="Type your message"
+                    v-on:keyup.enter="submit"
+                  />
+                </div>
+              </b-col>
+            </b-row>
+          </footer>
         </div>
       </b-col>
     </b-row>
-    <b-row class="search">
-      <b-col cols="10" md="10" sm="10">
-        <b-form-input placeholder="Type your message..."></b-form-input>
-        <b-icon icon="search"></b-icon>
-      </b-col>
-      <b-col cols="2" md="2" sm="2">
-        <p @click="$bvModal.show('modal-list-friend')" style="cursor: pointer">
-          +
-        </p>
-      </b-col>
-    </b-row>
-    <b-row class="detail-akses">
-      <b-col cols="4" md="4" sm="4" class="all">
-        <h6>All</h6>
-      </b-col>
-      <b-col cols="4" md="4" sm="4" class="read">
-        <h6>Read</h6>
-      </b-col>
-      <b-col cols="4" md="4" sm="4" class="unread">
-        <h6>Unread</h6>
-      </b-col>
-    </b-row>
-    <div class="list-chatting">
-      <b-row
-        v-for="(value, index) in getDataRoomList"
-        :key="index"
-        @click="getRoomMessage()"
-      >
-        <b-col cols="3" md="3" sm="3">
-          <img :src="urlAPI + value.user_image" alt="" srcset="" />
-        </b-col>
-        <b-col cols="9" md="9" sm="9">
-          <b-row>
-            <b-col cols="8" md="8" sm="8">
-              <h5>{{ value.user_fullname }}</h5>
-              <p>Content Message</p>
-            </b-col>
-            <b-col cols="4" md="4" sm="4">
-              <h6>15.20</h6>
-              <p>
-                <b-badge variant="primary">2</b-badge>
-              </p>
-            </b-col>
-          </b-row>
-        </b-col>
-      </b-row>
-    </div>
     <!-- Modal Logout -->
     <div>
       <b-modal id="modal-logout" centered>
@@ -320,6 +429,24 @@
         <hr />
         <h4>Location</h4>
         <p>Maps</p>
+        <b-col cols="12" md="12" sm="12">
+          <div class="maps">
+            <GmapMap
+              :center="coordinate"
+              :zoom="15"
+              map-type-id="terrain"
+              style="width: 250px; height: 250px"
+            >
+              <GmapMarker
+                :position="coordinate"
+                :clickable="true"
+                :draggable="true"
+                @click="clickMarker"
+                icon="https://img.icons8.com/color/48/000000/map-pin.png"
+              />
+            </GmapMap>
+          </div>
+        </b-col>
       </div>
     </b-sidebar>
     <!-- Sidebar Profile Friend -->
@@ -341,13 +468,34 @@ export default {
       form: {
         user_email: ''
       },
-      inMsg: ''
+      forms: {
+        message: ''
+      },
+      inMsg: '',
+      chat: false,
+      coordinate: {
+        lat: 0,
+        lng: 0
+      },
+      receiver_id: ''
     }
   },
   created() {
     this.getDataUsers()
     this.getListFriend()
     this.getDataRoom()
+    this.$getLocation()
+      .then((coordinates) => {
+        this.coordinate = {
+          lat: coordinates.lat,
+          lng: coordinates.lng
+        }
+        // console.log(coordinates)
+        console.log(this.coordinate)
+      })
+      .catch((error) => {
+        alert(error)
+      })
   },
   computed: {
     ...mapGetters([
@@ -356,7 +504,8 @@ export default {
       'getSearchUsers',
       'getDataFriend',
       'getDataRoomList',
-      'getFriends'
+      'getFriends',
+      'getDataMessage'
     ])
   },
   methods: {
@@ -370,7 +519,9 @@ export default {
       'getFriendById',
       'getRoomList',
       'postRoom',
-      'getFriendID'
+      'getFriendID',
+      'postRoomMessage',
+      'postDataMessage'
     ]),
     ...mapMutations(['searchUsers']),
     getFriend() {
@@ -486,9 +637,30 @@ export default {
       // console.log(setData)
       this.getRoomList(setData.user_id)
     },
-    getRoomMessage() {
-      this.chat = false
-      console.log('Get Message')
+    getRoomMessage(data) {
+      this.chat = true
+      const setData = {
+        room_id: data.room_id
+      }
+      this.postRoomMessage(setData)
+      // console.log(setData)
+    },
+    postMessage(data) {
+      this.receiver_id = data.user_id
+      // console.log(this.receiver_id)
+    },
+    submit() {
+      // const data = new FormData()
+      // data.append('message', this.forms.message)
+      const setData = {
+        room_id: this.getDataMessage[0].room_id,
+        sender_id: this.getFullUserData[0].user_id,
+        receiver_id: this.receiver_id,
+        message: this.forms.message
+      }
+      // console.log(setData)
+      this.postDataMessage(setData)
+      this.forms.message = ''
     },
     makeToast(variant = '') {
       this.$bvToast.toast(`${this.inMsg}`, {
@@ -504,6 +676,16 @@ export default {
       // this.getDataUsers()
       this.$router.push(`?search=${form}`)
       // this.changePage(1)
+    },
+    clickMarker(position) {
+      console.log('clicked')
+      console.log(position)
+      console.log(position.latLng.lat())
+      console.log(position.latLng.lng())
+      this.coordinate = {
+        lat: position.latLng.lat(),
+        lng: position.latLng.lng()
+      }
     },
     handleLogout() {
       this.$swal
@@ -555,58 +737,4 @@ export default {
 }
 </script>
 
-<style scoped>
-.sidebar .title {
-  padding: 10px 0;
-  color: #7e98df;
-}
-.sidebar .profile-image {
-  margin: 25px 0;
-  cursor: pointer;
-}
-.sidebar .profile-image img {
-  width: 82px;
-  height: 82px;
-  border-radius: 30px;
-  margin: 0 0 10px 0;
-}
-.sidebar .profile-image h6 {
-  color: #000;
-}
-.sidebar .profile-image p {
-  font-size: 16px;
-  color: #848484;
-}
-.sidebar .search {
-  padding: 0 0 20px 0;
-}
-.sidebar .search .b-icon.bi {
-  position: absolute;
-  top: 14px;
-  left: 25px;
-  color: #848484;
-}
-.sidebar .search input {
-  padding: 20px 35px;
-  background: #fafafa;
-  border-radius: 15px;
-}
-.sidebar .search p {
-  font-size: 50px;
-  font-weight: bold;
-  color: #7e98df;
-  position: absolute;
-  top: -20px;
-  right: 20px;
-}
-.sidebar .list-chatting {
-  height: 300px;
-  overflow: auto;
-  padding: 20px 0;
-}
-.sidebar .list-chatting img {
-  width: 64px;
-  height: 64px;
-  border-radius: 20px;
-}
-</style>
+<style scoped src="../../assets/css/main.css"></style>
