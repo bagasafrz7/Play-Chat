@@ -11,7 +11,7 @@
 
 ## About The Project
 
-This is my first point of sale project. Built with Vue JS as front-end and using Restfull API which is built with Express JS. The purpose of this application is to simplify sales transactions, and also easy to use by anyone. Thank you, hope it is useful. [More about Vue](https://vuejs.org/)
+Play Chat Apps are web-based chat applications that are used to interact online. Has a feature of finding friends, current location and can send messages in real-time. This application is built using Vue JS and Express JS. Thank you, hope it is useful. [More about Vue](https://vuejs.org/)
 
 ## Built With
 
@@ -44,8 +44,9 @@ VUE_APP_URL = http://backend-playchat.fwdev.online/
 - [Axios](https://www.npmjs.com/package/axios)
 - [Vuex](https://vuex.vuejs.org/)
 - [bootstrap-vue]
-- [chart.js]
 - [socket.io-client]
+- [vue2-google-maps]
+- [vue-browser-geolocation]
 
 ## Customize configuration
 
