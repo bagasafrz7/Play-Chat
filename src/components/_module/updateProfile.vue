@@ -154,6 +154,7 @@ export default {
     }
   },
   created() {
+    this.getLocationss()
     this.getDataUsers()
     this.$getLocation()
       .then((coordinates) => {
@@ -163,13 +164,19 @@ export default {
         }
         // console.log(coordinates)
         console.log(this.coordinate)
+        // console.log(this.getLoc)
       })
       .catch((error) => {
         alert(error)
       })
   },
   methods: {
-    ...mapActions(['addUsersForm', 'userLoginData', 'updateUsers']),
+    ...mapActions([
+      'addUsersForm',
+      'userLoginData',
+      'updateUsers',
+      'getLocationUsers'
+    ]),
     update() {
       // console.log(this.form)
       const data = new FormData()
@@ -198,6 +205,18 @@ export default {
     },
     getDataUsers() {
       this.userLoginData()
+        .then((response) => {
+          console.log(response)
+        })
+        .catch((error) => {
+          console.log(error.data)
+        })
+    },
+    getLocationss() {
+      const setData = {
+        user_id: this.getFullUserData[0].user_id
+      }
+      this.getLocationUsers(setData.user_id)
         .then((response) => {
           console.log(response)
         })
@@ -265,7 +284,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getFullUserData', 'userData'])
+    ...mapGetters(['getFullUserData', 'userData', 'getLoc'])
   }
 }
 </script>

@@ -457,6 +457,7 @@
 <script>
 // import axios from 'axios'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
+import io from 'socket.io-client'
 
 export default {
   name: 'Sidebar',
@@ -464,6 +465,7 @@ export default {
     return {
       user_id: '',
       urlAPI: process.env.VUE_APP_URL,
+      socket: io(`${process.env.VUE_APP_URL}`),
       dataUsers: [],
       form: {
         user_email: ''
@@ -484,14 +486,22 @@ export default {
     this.getDataUsers()
     this.getListFriend()
     this.getDataRoom()
+    this.getMessage()
     this.$getLocation()
       .then((coordinates) => {
         this.coordinate = {
           lat: coordinates.lat,
           lng: coordinates.lng
         }
+        const setData = {
+          user_id: this.getFullUserData[0].user_id,
+          user_lat: this.coordinate.lat,
+          user_lng: this.coordinate.lng
+        }
         // console.log(coordinates)
-        console.log(this.coordinate)
+        // console.log(this.coordinate)
+        // console.log(setData)
+        this.updateLocation(setData)
       })
       .catch((error) => {
         alert(error)
@@ -508,6 +518,11 @@ export default {
       'getDataMessage'
     ])
   },
+  mounted() {
+    this.socket.on('chatMessage', (data) => {
+      this.getDataMessage.push(data)
+    })
+  },
   methods: {
     ...mapActions([
       'userLoginData',
@@ -521,7 +536,8 @@ export default {
       'postRoom',
       'getFriendID',
       'postRoomMessage',
-      'postDataMessage'
+      'postDataMessage',
+      'updateLocation'
     ]),
     ...mapMutations(['searchUsers']),
     getFriend() {
@@ -637,6 +653,12 @@ export default {
       // console.log(setData)
       this.getRoomList(setData.user_id)
     },
+    getMessage() {
+      const setData = {
+        room_id: this.getDataMessage[0].room_id
+      }
+      this.postRoomMessage(setData)
+    },
     getRoomMessage(data) {
       this.chat = true
       const setData = {
@@ -660,6 +682,9 @@ export default {
       }
       // console.log(setData)
       this.postDataMessage(setData)
+      this.postRoomMessage(setData)
+      // this.getRoomMessage(setData.room_id)
+      // this.socket.emit('privateMessage', setData)
       this.forms.message = ''
     },
     makeToast(variant = '') {
