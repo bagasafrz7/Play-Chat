@@ -2,7 +2,7 @@
   <p align="center">
     <a href="https://play-chat.netlify.app/">View Demo</a>
     ·
-    <a href="hhttps://github.com/bagasafrz7/Play-Chat/issues">Report Bug</a>
+    <a href="https://github.com/bagasafrz7/Play-Chat/issues">Report Bug</a>
     ·
     <a href="https://github.com/bagasafrz7/Play-Chat/issues">Request Feature</a>
   </p>
