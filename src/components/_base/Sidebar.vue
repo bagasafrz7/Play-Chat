@@ -96,7 +96,7 @@
           <b-row
             v-for="(value, index) in getDataRoomList"
             :key="index"
-            @click="getRoomMessage(value), postMessage(value)"
+            @click="getRoomMessage(value)"
           >
             <b-col cols="3" md="3" sm="3">
               <img :src="urlAPI + value.user_image" alt="" srcset="" />
@@ -465,7 +465,7 @@ export default {
     return {
       user_id: '',
       urlAPI: process.env.VUE_APP_URL,
-      socket: io(`${process.env.VUE_APP_URL}`),
+      socket: io('http://127.0.0.1:3001'),
       dataUsers: [],
       form: {
         user_email: ''
@@ -479,29 +479,24 @@ export default {
         lat: 0,
         lng: 0
       },
-      receiver_id: ''
+      receiver_id: '',
+      oldRoom: ''
     }
   },
   created() {
+    this.getLocationss()
     this.getDataUsers()
     this.getListFriend()
     this.getDataRoom()
     this.getMessage()
+    this.getLocationss()
     this.$getLocation()
       .then((coordinates) => {
         this.coordinate = {
-          lat: coordinates.lat,
-          lng: coordinates.lng
+          lat: this.coordinate.lat,
+          lng: this.coordinate.lng
         }
-        const setData = {
-          user_id: this.getFullUserData[0].user_id,
-          user_lat: this.coordinate.lat,
-          user_lng: this.coordinate.lng
-        }
-        // console.log(coordinates)
-        // console.log(this.coordinate)
-        // console.log(setData)
-        this.updateLocation(setData)
+        console.log(this.coordinate)
       })
       .catch((error) => {
         alert(error)
@@ -515,12 +510,14 @@ export default {
       'getDataFriend',
       'getDataRoomList',
       'getFriends',
-      'getDataMessage'
+      'getDataMessage',
+      'getLoc'
     ])
   },
   mounted() {
     this.socket.on('chatMessage', (data) => {
       this.getDataMessage.push(data)
+      console.log(this.getDataMessage)
     })
   },
   methods: {
@@ -537,7 +534,8 @@ export default {
       'getFriendID',
       'postRoomMessage',
       'postDataMessage',
-      'updateLocation'
+      'updateLocation',
+      'getLocationUsers'
     ]),
     ...mapMutations(['searchUsers']),
     getFriend() {
@@ -557,16 +555,6 @@ export default {
         .catch((error) => {
           console.log(error.data)
         })
-      // axios
-      //   .get(`${process.env.VUE_APP_URL}users/${this.users.user_id}`)
-      //   .then((response) => {
-      //     // this.dataUsers = response.data.data
-      //     // console.log(this.dataUsers)
-      //     console.log(response)
-      //   })
-      //   .catch((error) => {
-      //     console.log(error)
-      //   })
     },
     deletePermanent() {
       const setData = {
@@ -660,17 +648,32 @@ export default {
       this.postRoomMessage(setData)
     },
     getRoomMessage(data) {
+      this.receiver_id = data.user_id
       this.chat = true
       const setData = {
         room_id: data.room_id
       }
+      if (this.oldRoom) {
+        // console.log('sudah pernah klik room' + this.oldRoom)
+        // console.log('dan akan masuk room' + data.room_id)
+        this.socket.emit('changeRoom', {
+          oldRoom: this.oldRoom,
+          newRoom: setData
+        })
+        this.oldRoom = setData
+      } else {
+        // console.log('belum pernah klik room')
+        // console.log('dan akan masuk ke room' + data.room_id)
+        this.socket.emit('setRoom', setData)
+        this.oldRoom = setData
+      }
       this.postRoomMessage(setData)
       // console.log(setData)
     },
-    postMessage(data) {
-      this.receiver_id = data.user_id
-      // console.log(this.receiver_id)
-    },
+    // postMessage(data) {
+    //   // this.receiver_id = data.user_id
+    //   // console.log(this.receiver_id)
+    // },
     submit() {
       // const data = new FormData()
       // data.append('message', this.forms.message)
@@ -684,8 +687,23 @@ export default {
       this.postDataMessage(setData)
       this.postRoomMessage(setData)
       // this.getRoomMessage(setData.room_id)
-      // this.socket.emit('privateMessage', setData)
+      this.socket.emit('privateMessage', setData)
       this.forms.message = ''
+    },
+    getLocationss() {
+      const setData = {
+        user_id: this.getFriends.friend_id
+      }
+      this.getLocationUsers(setData.user_id)
+        .then((response) => {
+          this.coordinate.lat = parseInt(response[0].user_lat)
+          this.coordinate.lng = parseInt(response[0].user_lng)
+          console.log(response)
+          console.log(typeof this.coordinate.lat)
+        })
+        .catch((error) => {
+          console.log(error.data)
+        })
     },
     makeToast(variant = '') {
       this.$bvToast.toast(`${this.inMsg}`, {

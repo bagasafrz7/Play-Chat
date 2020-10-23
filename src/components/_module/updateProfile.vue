@@ -156,15 +156,14 @@ export default {
   created() {
     this.getLocationss()
     this.getDataUsers()
+    this.getLocationss()
     this.$getLocation()
       .then((coordinates) => {
         this.coordinate = {
-          lat: coordinates.lat,
-          lng: coordinates.lng
+          lat: this.coordinate.lat,
+          lng: this.coordinate.lng
         }
-        // console.log(coordinates)
         console.log(this.coordinate)
-        // console.log(this.getLoc)
       })
       .catch((error) => {
         alert(error)
@@ -218,23 +217,15 @@ export default {
       }
       this.getLocationUsers(setData.user_id)
         .then((response) => {
-          console.log(response)
+          this.coordinate.lat = parseInt(response[0].user_lat)
+          this.coordinate.lng = parseInt(response[0].user_lng)
+          // console.log(response)
+          console.log(typeof this.coordinate.lat)
         })
         .catch((error) => {
           console.log(error.data)
         })
     },
-    // setProduct(data) {
-    //   this.form = {
-    //     user_fullname: data.user_fullname,
-    //     user_name: data.user_name,
-    //     user_image: data.user_image,
-    //     user_phone: data.user_phone,
-    //     user_bio: data.user_bio
-    //   }
-    //   this.user_id = data.user_id
-    // console.log(data.product_id)
-    // },
     clickMarker(position) {
       console.log('clicked')
       console.log(position)
@@ -257,11 +248,6 @@ export default {
     },
     browse(event) {
       this.form.user_image = event.target.files[0]
-      // this.form.image = event.target.files[0]
-      // const data = new FormData()
-      // data.append('image', this.form.image)
-      // this.profilePicture([data, this.userData.user_id])
-      // this.profilePicture([this.form.image, this.userData.user_id])
     },
     fitur() {
       this.boxTwo = ''
