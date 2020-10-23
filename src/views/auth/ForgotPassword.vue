@@ -12,11 +12,22 @@
               </b-col>-->
               <h6>You'll get messages soon on your e-mail</h6>
               <b-form>
-                <b-form-group id="input-group-1" label="Email" label-for="input-1">
-                  <b-form-input id="input-1" type="email" required placeholder="Enter Your Email"></b-form-input>
+                <b-form-group
+                  id="input-group-1"
+                  label="Email"
+                  label-for="input-1"
+                >
+                  <b-form-input
+                    id="input-1"
+                    type="email"
+                    required
+                    placeholder="Enter Your Email"
+                  ></b-form-input>
                 </b-form-group>
 
-                <b-button type="submit" class="btn-login" variant="primary">Send</b-button>
+                <b-button type="submit" class="btn-login" variant="primary"
+                  >Send</b-button
+                >
               </b-form>
             </div>
           </b-col>
@@ -82,5 +93,16 @@ label {
   border-radius: 25px;
   background: #7e98df;
   border: 1px solid #7e98df;
+}
+
+@media (max-width: 768px) {
+  .main-login {
+    width: 75%;
+  }
+}
+@media (max-width: 576px) {
+  .main-login {
+    width: 100%;
+  }
 }
 </style>

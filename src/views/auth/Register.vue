@@ -209,4 +209,15 @@ hr {
   background: #fff;
   color: #7e98df;
 }
+
+@media (max-width: 768px) {
+  .main-login {
+    width: 75%;
+  }
+}
+@media (max-width: 576px) {
+  .main-login {
+    width: 100%;
+  }
+}
 </style>

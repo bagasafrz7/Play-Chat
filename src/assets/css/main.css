@@ -156,3 +156,27 @@
     font-size: 32px;
     color: #7e98df;
   }
+
+  @media (max-width: 576px) {
+    .in-chat .main-chat .sender .content-chat {
+      width: 80%;
+    }
+    .in-chat .main-chat .receiver .content-chat {
+      width: 80%;
+    }
+    footer .send-chat .b-icon.bi.plus {
+      position: absolute;
+      right: 150px;
+      font-size: 28px;
+    }
+    footer .send-chat .b-icon.bi.emoticon {
+      position: absolute;
+      right: 100px;
+      font-size: 28px;
+    }
+    footer .send-chat .b-icon.bi.picture {
+      position: absolute;
+      right: 50px;
+      font-size: 28px;
+    }
+  }

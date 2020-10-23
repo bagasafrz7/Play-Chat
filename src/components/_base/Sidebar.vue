@@ -1,7 +1,7 @@
 <template>
   <div class="sidebar">
     <b-row>
-      <b-col cols="12" md="3" class="sidebar-main">
+      <b-col cols="12" md="12" xl="3" class="sidebar-main">
         <b-row class="title">
           <b-col cols="6" md="6" sm="6">
             <h4>Play Chat</h4>
@@ -115,7 +115,7 @@
           </b-row>
         </div>
       </b-col>
-      <b-col cols="12" md="9">
+      <b-col cols="12" md="12" xl="9">
         <b-row class="chat">
           <b-col cols="12" md="12" sm="12">
             <div class="no-chat" v-show="chat === false">
@@ -301,7 +301,7 @@
             >
               <hr />
               <b-row style="padding: 0 50px">
-                <b-col cols="2" md="2" sm="2">
+                <b-col cols="12" md="12" lg="3" xl="2">
                   <img
                     :src="urlAPI + item.user_image"
                     alt=""
@@ -309,13 +309,13 @@
                     style="width: 150px; height: 150px; border-radius: 20px"
                   />
                 </b-col>
-                <b-col cols="4" md="4" sm="4">
+                <b-col cols="10" md="10" lg="5" xl="4">
                   <h4 class="mb-2">{{ item.user_fullname }}</h4>
                   <p>@{{ item.user_name }}</p>
                   <p>{{ item.user_email }}</p>
                   <p>{{ item.user_phone }}</p>
                 </b-col>
-                <b-col cols="6" md="6" sm="6" class="text-right">
+                <b-col cols="2" md="2" lg="4" xl="6" class="text-right">
                   <b-icon
                     icon="person-plus"
                     aria-hidden="true"
@@ -357,7 +357,7 @@
             class="my-4"
           >
             <b-row style="padding: 0 50px">
-              <b-col cols="2" md="2" sm="2">
+              <b-col cols="12" md="12" xl="2" lg="3">
                 <img
                   v-b-toggle.sidebar-right
                   @click="profileFriend(item)"
@@ -374,9 +374,10 @@
                 />
               </b-col>
               <b-col
-                cols="4"
-                md="4"
-                sm="4"
+                cols="10"
+                md="10"
+                lg="5"
+                xl="4"
                 v-b-toggle.sidebar-right
                 @click="profileFriend(item)"
                 style="cursor: pointer; outline: none"
@@ -388,7 +389,7 @@
                 <p>{{ item.user_bio }}</p>
                 <!-- <b-button v-b-toggle.sidebar-right>Toggle Sidebar</b-button> -->
               </b-col>
-              <b-col cols="6" md="6" sm="6" class="text-right">
+              <b-col cols="2" md="2" xl="6" lg="4" class="text-right">
                 <b-icon
                   icon="chat-dots"
                   aria-hidden="true"
