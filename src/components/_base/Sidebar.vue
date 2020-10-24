@@ -466,7 +466,8 @@ export default {
     return {
       user_id: '',
       urlAPI: process.env.VUE_APP_URL,
-      socket: io('http://127.0.0.1:3001'),
+      // socket: io('http://127.0.0.1:3001'),
+      socket: io(`${process.env.VUE_APP_URL}`),
       dataUsers: [],
       form: {
         user_email: ''
