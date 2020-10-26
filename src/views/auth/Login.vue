@@ -88,7 +88,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['login']),
+    ...mapActions(['login', 'getRoomList']),
     makeToast(variant = '') {
       this.$bvToast.toast(`${this.inMsg}`, {
         title: `Notice! ${'' || ''}`,
@@ -100,6 +100,7 @@ export default {
       // console.log(this.form)
       this.login(this.form)
         .then((result) => {
+          this.getRoomList(result.data.user_id)
           // console.log(result)
           this.$swal.fire({
             position: 'center',

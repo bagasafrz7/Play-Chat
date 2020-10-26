@@ -640,8 +640,14 @@ export default {
       const setData = {
         user_id: this.getFullUserData[0].user_id
       }
-      // console.log(setData)
+      console.log(setData.user_id)
       this.getRoomList(setData.user_id)
+        .then((response) => {
+          console.log(response)
+        })
+        .catch((error) => {
+          console.log(error.data)
+        })
     },
     getMessage() {
       const setData = {
